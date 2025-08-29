@@ -54,12 +54,12 @@ namespace GamePrototype.Units
             }
             if (economicItem is Grindstone grindstone)
             {
-                if (_equipment.TryGetValue(EquipSlot.Armour, out var item) && item is Armour armour)
+                if (_equipment.TryGetValue(EquipSlot.Weapon, out var item) && item is Weapon weapon)
                 {
-                    armour.Repair(7);
-                    Console.WriteLine(armour.Durability);
+                    weapon.Repair(7);
                 }
             }
+            //
 
 
         }
@@ -70,7 +70,6 @@ namespace GamePrototype.Units
             {
                 damage -= (uint)(damage * (armour.Defence / 100f));
                 armour.ReduceDurability(1);
-                Console.WriteLine(armour.Durability);
                 //
             }
             return damage;
