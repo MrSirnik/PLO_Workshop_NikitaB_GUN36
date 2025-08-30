@@ -14,7 +14,7 @@ namespace GamePrototype.Units
         {            
         }
 
-        public override uint GetUnitDamage()
+        public override uint GetUnitDamage()//считает и возврощает дамаг от игрока с учетом его оружия
         {
             if (_equipment.TryGetValue(EquipSlot.Weapon, out var item) && item is Weapon weapon) 
             {
@@ -23,7 +23,7 @@ namespace GamePrototype.Units
             return BaseDamage;
         }
 
-        public override void HandleCombatComplete()
+        public override void HandleCombatComplete()//конец боя и использование всех предметов что можно использовать
         {
             var items = Inventory.Items;
             for (int i = 0; i < items.Count; i++) 
@@ -40,7 +40,8 @@ namespace GamePrototype.Units
         {
             if (item is EquipItem equipItem && _equipment.TryAdd(equipItem.Slot, equipItem)) 
             {
-                // Item was equipped
+                Console.WriteLine($"Item - {equipItem.Slot} was equipped");
+                // Item was equipped - Предмет был надет
                 return;
             }
             base.AddItemToInventory(item);
@@ -59,18 +60,15 @@ namespace GamePrototype.Units
                     weapon.Repair(7);
                 }
             }
-            //
-
-
         }
 
-        protected override uint CalculateAppliedDamage(uint damage)
+        protected override uint CalculateAppliedDamage(uint damage)//высчитывается получаемый урон с учетом брони и
+                                                                   //понижается её прочность после получения урона
         {
             if (_equipment.TryGetValue(EquipSlot.Armour, out var item) && item is Armour armour) 
             {
                 damage -= (uint)(damage * (armour.Defence / 100f));
                 armour.ReduceDurability(1);
-                //
             }
             return damage;
         }

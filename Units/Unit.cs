@@ -1,4 +1,5 @@
 ﻿using GamePrototype.Items.EconomicItems;
+using GamePrototype.Items.EquipItems;
 
 namespace GamePrototype.Units
 {
@@ -31,7 +32,7 @@ namespace GamePrototype.Units
         public void ApplyDamage(uint damage)
         {
             var damageApplied = CalculateAppliedDamage(damage);
-            if (_health < damageApplied || (_health - damageApplied) <= 0) 
+            if (_health < damageApplied || (_health - damageApplied) <= 0)//если зоровье меньше или равно получаемому урону
             {
                 _health = 0;
             }
@@ -45,26 +46,29 @@ namespace GamePrototype.Units
 
         protected abstract uint CalculateAppliedDamage(uint damage);
         
-        protected virtual void DamageReceiveHandler() { }
-        
-        public abstract uint GetUnitDamage();
+        protected virtual void DamageReceiveHandler() { }//как я понял не используется
 
-        public abstract void HandleCombatComplete();
+        public abstract uint GetUnitDamage();//считает и возврощает дамаг от Юнита с учетом его оружия
 
-        public virtual void AddItemToInventory(Item item) 
+        public abstract void HandleCombatComplete();//в игроке
+
+        public virtual void AddItemToInventory(Item item)//проверка полон ли инвентарь
         {
-            if (!Inventory.TryAdd(item)) 
+            if (!Inventory.TryAdd(item))//если НЕполучается добавить предмет
+                                        //выводит что инвентарь полон
             {
                 Console.WriteLine($"Inventory of {Name} is full");
             }
+            
         }
 
-        public void AddItemsFromUnitToInventory(Unit unit)
+        public void AddItemsFromUnitToInventory(Unit unit)//будто не законченный метод сбора ресурсов с врага
         {
             for (int i = 0; i < unit.Inventory.Items.Count; i++) 
             {
                 if (!Inventory.TryAdd(unit.Inventory.Items[i])) 
                 {
+                    Console.WriteLine($"Inventory of {Name} is full");
                     //inventory is full
                     return;
                 }

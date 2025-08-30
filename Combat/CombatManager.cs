@@ -8,12 +8,14 @@ namespace GamePrototype.Combat
         
         public Unit StartCombat(Unit player, Unit enemy) => PlayCombatRoutine(player, enemy);
 
-        private Unit PlayCombatRoutine(Unit player, Unit enemy)
+        private Unit PlayCombatRoutine(Unit player, Unit enemy)//начинает бой до смерти одного из учасников, возвращает выигравшего
         {
             Console.WriteLine(GetCombatString());
-            while (player.Health > 0 && enemy.Health > 0) 
+            while (player.Health > 0 && enemy.Health > 0)//пока все из учасников боя живы
             {
-                if (Enum.TryParse<RockPaperScissors>(Console.ReadLine(), out var rockPaperScissors)) 
+                if (Enum.TryParse<RockPaperScissors>(Console.ReadLine(), out var rockPaperScissors))//если преобразование пользовательского ввода
+                                                                                                    //в одно из значений перечисления RockPaperScissors
+                                                                                                    //будет удачным то сохраниться в rockPaperScissors
                 {
                     HandleCombatInput(player, enemy, rockPaperScissors);
                 }
@@ -34,18 +36,19 @@ namespace GamePrototype.Combat
             return null;
         }
 
+        //вывод выбора - Камня Ножниц Бумаги
         private string GetCombatString() => $"Type {RockPaperScissors.Rock} = {(int)RockPaperScissors.Rock}" +
             $"or {RockPaperScissors.Paper} = {(int)RockPaperScissors.Paper}" +
             $"or {RockPaperScissors.Scissors} = {(int)RockPaperScissors.Scissors}";
 
-        private void HandleCombatInput(Unit player, Unit enemy, RockPaperScissors rockPaperScissors)
+        private void HandleCombatInput(Unit player, Unit enemy, RockPaperScissors rockPaperScissors)//нанесение урона (ApplyDamage())  и  кому нанести урон
         {
             var enemyInput = (RockPaperScissors) _random.Next(1, 3);
             Console.WriteLine($"Result player = {rockPaperScissors} and enemy = {enemyInput}");
             switch (rockPaperScissors) 
             {
                 // player hit
-                case RockPaperScissors.Rock when enemyInput == RockPaperScissors.Scissors:
+                case RockPaperScissors.Rock when enemyInput == RockPaperScissors.Scissors://when — это "причем если..."
                     ApplyDamage(player, enemy);
 
                     break;
@@ -73,12 +76,8 @@ namespace GamePrototype.Combat
             }
         }
 
-        private void ApplyDamage(Unit attacker, Unit defender)
+        private void ApplyDamage(Unit attacker, Unit defender)//нанесение единоразового урона
         {
-            /*
-            if (!Inventory.Items == null) { }
-            var items = Inventory.Items;
-            */
             defender.ApplyDamage(attacker.GetUnitDamage());
             Console.WriteLine($"{attacker.Name} hits {defender.Name}. {defender.Name} health {defender.Health}/{defender.MaxHealth}");
             

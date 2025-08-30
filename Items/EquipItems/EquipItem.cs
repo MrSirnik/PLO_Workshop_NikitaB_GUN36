@@ -14,9 +14,9 @@ namespace GamePrototype.Items.EquipItems
 
         protected EquipItem(uint maxDurability, string name) : base(name) => _maxDurability = maxDurability;
 
-        public void ReduceDurability(uint delta) => _durability -= delta;//прочность--
+        public void ReduceDurability(uint delta) => _durability -= delta;//уменьшение прочности
 
-        public void Repair(uint delta) => //ремонт++
+        public void Repair(uint delta) => //починка
             _durability += _durability + delta > _maxDurability 
             ? _maxDurability 
             : _durability + delta;

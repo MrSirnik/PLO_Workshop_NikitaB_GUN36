@@ -23,7 +23,28 @@ namespace GamePrototype.Game
         private void Initialize()
         {
             Console.WriteLine("Welcome, player!");
-            _dungeon = DungeonBuilder.BuildDungeon();
+            while(true) { 
+                Console.WriteLine("Choose the difficulty level:  Easy - 1  /  Hard - 2 ");
+                if (Enum.TryParse <Difficulty> (Console.ReadLine(), out var difficulty))
+                {
+                    if(difficulty == Difficulty.Easy)
+                    {
+                        _dungeon = DungeonBuilder.EasyBuildDungeon();
+                        break;
+                    }
+                    else if (difficulty == Difficulty.Hard)
+                    {
+                        _dungeon = DungeonBuilder.HardBuildDungeon();
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("The input is not correct!");
+                    }
+                }
+            }
+
+            
             Console.WriteLine("Enter your name");
             _player = UnitFactoryDemo.CreatePlayer(Console.ReadLine());
             Console.WriteLine($"Hello {_player.Name}");
@@ -60,14 +81,15 @@ namespace GamePrototype.Game
             Console.WriteLine(_player.ToString());
         }
 
-        private void StartRoomEncounter(DungeonRoom currentRoom, out bool success)
+        private void StartRoomEncounter(DungeonRoom currentRoom, out bool success)//начало в комнате
+        //out bool success — выходной параметр, указывающий успешность операции
         {
             success = true;
-            if (currentRoom.Loot != null) 
+            if (currentRoom.Loot != null)//если в комнате есть лут
             {
                 _player.AddItemToInventory(currentRoom.Loot);
             }
-            if (currentRoom.Enemy != null) 
+            if (currentRoom.Enemy != null)//если в комнате есть враг
             {
                 if (_combatManager.StartCombat(_player, currentRoom.Enemy) == _player)
                 {
@@ -76,11 +98,11 @@ namespace GamePrototype.Game
                 }
                 else 
                 {
-                    success = false;
+                    success = false;//Game over!
                 }
             }
 
-            void LootEnemy(Unit enemy)
+            void LootEnemy(Unit enemy)//осмотор врага на наличие лута
             {
                 _player.AddItemsFromUnitToInventory(enemy);
             }
